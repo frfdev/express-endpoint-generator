@@ -9,8 +9,8 @@ process.stdin.on('data', (input) =>{
 
     const dir = path.join('./output')
     const dirRouter = path.join('./output/router')
-    const dirSchema = path.join('./output/schema')
-    const dirSerivice = path.join('./output/service')
+    const dirSchema = path.join('./output/schemas')
+    const dirSerivice = path.join('./output/services')
 
     if(!fs.existsSync(dir)){
         fs.mkdirSync(dir, { recursive: true})
@@ -76,13 +76,14 @@ const ${endpoint}Service = require("../services/${toCamelCase(endpoint)}.service
 const validatorHandler = require("../middlewares/validator.handler");
 const {
     create${endpoint}Schema,
+    getAll${endpoint}Schema,
     find${endpoint}Schema,
-    upate${endpoint}Schema,
+    update${endpoint}Schema,
     delete${endpoint}Schema
-} = require("./schemas/${toCamelCase(endpoint)}.schema");
+} = require("../schemas/${toCamelCase(endpoint)}.schema");
 
 const router = express.Router();
-let thisService = new ${endpoint}Service
+let thisService = new ${endpoint}Service()
 
 router.get(
     "/all",
@@ -177,25 +178,38 @@ const object = Joi.object()
 const create${endpoint}Schema = Joi.object({
 
 })
+
+const getAll${endpoint}Schema = Joi.object({
+
+})
+
 const find${endpoint}Schema = Joi.object({
     
 })
-const upate${endpoint}Schema = Joi.object({
+
+const update${endpoint}Schema = Joi.object({
     
 })
+
 const delete${endpoint}Schema = Joi.object({
     
 })
 
-module.exports = { create${endpoint}Schema,  find${endpoint}Schema,  upate${endpoint}Schema, delete${endpoint}Schema }; 
+module.exports = { create${endpoint}Schema, getAll${endpoint}Schema,  find${endpoint}Schema,  update${endpoint}Schema, delete${endpoint}Schema }; 
 
     `
     const serviceData = `
+
+const { QueryTypes } = require("sequelize");
+const { initializeConnection } = require("../libs/sequelize");
+const crypto = require("crypto");
 
 class ${endpoint}Service {
     constructor() {}
 
     async create(data) {
+
+        const sequelize = await initializeConnection(data.bd);
 
         try {
             return {
@@ -216,6 +230,8 @@ class ${endpoint}Service {
 
     async getAll(bd) {
 
+        const sequelize = await initializeConnection(data.bd);
+
         try {
 
             return {
@@ -235,6 +251,8 @@ class ${endpoint}Service {
 
     async update(data) {
 
+        const sequelize = await initializeConnection(data.bd);
+
         try {
 
             return {
@@ -253,6 +271,8 @@ class ${endpoint}Service {
     }
 
     async delete(data) {
+
+        const sequelize = await initializeConnection(data.bd);
 
         try {
 
